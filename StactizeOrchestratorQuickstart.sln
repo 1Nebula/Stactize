@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artefacts", "Artefacts", "{C723BB86-B7EA-42CA-B1F8-78C7178BC576}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{39955216-97F2-457E-A582-8C520BF37D7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E9D7C438-905B-4646-92C7-4F8233E5503C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{648C5F31-9CDE-466A-BC43-A5D680F78C96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableFunctionOrchestratorExample", "DurableFunctionOrchestratorExample\DurableFunctionOrchestratorExample.csproj", "{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrator.Core", "Orchestrator.Core\Orchestrator.Core.csproj", "{9B2287E7-3B19-4E46-A671-CDD62395451B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrator.Services", "Orchestrator.Services\Orchestrator.Services.csproj", "{3C135827-FEBC-4758-8F21-ADF7693BB5F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stactize.DurableFunctionOrchestratorExample.Tests", "Stactize.DurableFunctionOrchestratorExample.Tests\Stactize.DurableFunctionOrchestratorExample.Tests.csproj", "{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B2287E7-3B19-4E46-A671-CDD62395451B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2287E7-3B19-4E46-A671-CDD62395451B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2287E7-3B19-4E46-A671-CDD62395451B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2287E7-3B19-4E46-A671-CDD62395451B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C135827-FEBC-4758-8F21-ADF7693BB5F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C135827-FEBC-4758-8F21-ADF7693BB5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C135827-FEBC-4758-8F21-ADF7693BB5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C135827-FEBC-4758-8F21-ADF7693BB5F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390} = {C723BB86-B7EA-42CA-B1F8-78C7178BC576}
+		{9B2287E7-3B19-4E46-A671-CDD62395451B} = {648C5F31-9CDE-466A-BC43-A5D680F78C96}
+		{3C135827-FEBC-4758-8F21-ADF7693BB5F6} = {39955216-97F2-457E-A582-8C520BF37D7C}
+		{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8} = {E9D7C438-905B-4646-92C7-4F8233E5503C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF73765F-6DD8-43A4-A090-20A2B6D1BF5B}
+	EndGlobalSection
+EndGlobal
