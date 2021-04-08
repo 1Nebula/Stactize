@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
@@ -96,7 +95,7 @@ namespace DurableFunctionOrchestratorExample
         [FunctionName(Constants.DurableActivity.Delete)]
         public OrchestrationResultModel DeleteInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
         {
-            //Call your orchestration functions here to create your instances and generate a url for a user to log in to
+            //Call your orchestration functions here to delete your instances
             return orchestrationAction.CreateSuccessResult(null);
         }
 
