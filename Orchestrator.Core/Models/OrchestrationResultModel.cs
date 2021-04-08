@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Orchestrator.Core
 {
@@ -7,21 +8,25 @@ namespace Orchestrator.Core
         /// <summary>
         /// Id of the operation that was executed
         /// </summary>
+        [Required]
         public string OperationId { get; set; }
 
         /// <summary>
         /// Id of the Tenant that the operation was executed for
         /// </summary>
+        [Required]
         public string TenantId { get; set; }
 
         /// <summary>
         /// Id of the Subscription the operation was executed for
         /// </summary>
+        [Required]
         public string SubscriptionId { get; set; }
 
         /// <summary>
         /// Id of the Application the operation was executed for
         /// </summary>
+        [Required]
         public string ApplicationId { get; set; }
 
         /// <summary>
