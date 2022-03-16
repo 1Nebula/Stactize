@@ -40,9 +40,17 @@ namespace Orchestrator.Core
         public FailureMessageModel FailureMessage { get; set; }
 
         /// <summary>
-        /// The URL that will be sent to the user when creation is successful
+        /// The URL that will be sent to the user when creation is successful.
+        /// If FirstTimeLoginUrl is set, this Url will be used when navigating to the app via the SaaS portal.
         /// </summary>
         public Uri LoginUrl { get; set; }
+
+        /// <summary>
+        /// Optional URL that will be sent to the user once activiation is successful instead of LoginUrl.
+        /// Use URLs with one-time pins or specific path for users to activate their account
+        /// </summary>
+        public Uri FirstTimeLoginUrl { get; set; }
+
     }
 
     public class FailureMessageModel

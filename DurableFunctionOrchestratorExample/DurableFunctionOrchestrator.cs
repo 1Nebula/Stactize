@@ -4,7 +4,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Core;
+using Orchestrator.Core.Constants;
 using Orchestrator.Core.Contracts;
+using Orchestrator.Core.Models;
 
 namespace DurableFunctionOrchestratorExample
 {
@@ -19,9 +21,9 @@ namespace DurableFunctionOrchestratorExample
 
         [FunctionName(Constants.OrchestrationTrigger)]
         public static async Task TriggerOrchestrator(
-            [ServiceBusTrigger(Constants.QueueName, Connection = Constants.ingressConnectionString)]OrchestrationActionModel myQueueItem,
+            [ServiceBusTrigger(ConfigurationConstants.ingressQueueName_, Connection = ConfigurationConstants.ingressConnectionString)] OrchestrationActionModel myQueueItem,
             ILogger log,
-            [DurableClient]IDurableOrchestrationClient durableOrchestrationClient)
+            [DurableClient] IDurableOrchestrationClient durableOrchestrationClient)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
 

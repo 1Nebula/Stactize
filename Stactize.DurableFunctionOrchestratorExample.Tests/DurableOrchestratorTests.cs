@@ -7,6 +7,8 @@ using Moq;
 using NUnit.Framework;
 using Orchestrator.Core;
 using Orchestrator.Core.Contracts;
+using Orchestrator.Core.Models;
+using Orchestrator.Core.Constants;
 using System.Threading.Tasks;
 
 namespace Stactize.DurableFunctionOrchestratorExample.Tests
