@@ -3,7 +3,9 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "ingressServiceBusConnectionString": "Endpoint=sb://sb-48-bus-marketplacedev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=/F7t3S4NWXPBI0hnAEIYzdpTIPOCX0oUjwSIDs2mg4s=",
-    "egressServiceBusConnectionString": "Endpoint=sb://sb-48-bus-marketplacedev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=/F7t3S4NWXPBI0hnAEIYzdpTIPOCX0oUjwSIDs2mg4s="
+    "ingressServiceBusConnectionString": "{{EgressQueueConnectionString}}",
+    "ingressQueueName": "{{IngressQueueName}}",
+    "egressServiceBusConnectionString": "{{EgressQueueConnectionString}}",
+    "egressQueueName": "{{EgressQueueName}}"
   }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Orchestrator.Core
+namespace Orchestrator.Core.Models
 {
     public class OrchestrationActionModel
     {
@@ -40,7 +40,18 @@ namespace Orchestrator.Core
         /// </summary>
         public IEnumerable<UserFieldValueModel> UserFields { get; set; }
 
-        public OrchestrationResultModel CreateSuccessResult(Uri loginUrl)
+        /// <summary>
+        /// Dictionary of extra details associated with the action
+        /// </summary>
+        public IDictionary<string, string> ActionDetails { get; set; }
+
+        /// <summary>
+        /// Creates an OrchestrationResultModel with State set to Succeeded
+        /// </summary>
+        /// <param name="loginUrl"></param>
+        /// <param name="firstTimeLoginUrl">Optional</param>
+        /// <returns></returns>
+        public OrchestrationResultModel CreateSuccessResult(Uri loginUrl, Uri firstTimeLoginUrl = null)
         {
             return new OrchestrationResultModel()
             {
@@ -49,10 +60,16 @@ namespace Orchestrator.Core
                 SubscriptionId = this.SubscriptionId,
                 TenantId = this.TenantId,
                 State = OrchestrationState.Succeeded,
-                LoginUrl = loginUrl
+                LoginUrl = loginUrl,
+                FirstTimeLoginUrl = firstTimeLoginUrl
             };
         }
 
+        /// <summary>
+        /// Creates an OrchestrationResultModel with State set to Failed
+        /// </summary>
+        /// <param name="failureMessage"></param>
+        /// <returns></returns>
         public OrchestrationResultModel CreateFailedResult(FailureMessageModel failureMessage)
         {
             return new OrchestrationResultModel()

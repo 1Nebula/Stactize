@@ -1,12 +1,12 @@
 using AutoFixture;
 using DurableFunctionOrchestratorExample;
 using FluentAssertions;
-using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Orchestrator.Core;
 using Orchestrator.Core.Contracts;
+using Orchestrator.Core.Models;
 using System.Threading.Tasks;
 
 namespace Stactize.DurableFunctionOrchestratorExample.Tests

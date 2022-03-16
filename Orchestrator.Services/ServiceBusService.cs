@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Orchestrator.Core;
+using Orchestrator.Core.Constants;
 using Orchestrator.Core.Contracts;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,9 @@ namespace Orchestrator.Services
 
         public ServiceBusService(IConfiguration configuration)
         {
-            _queueClient = new QueueClient(configuration["egressServiceBusConnectionString"], "orchestratorreadqueue");
+            _queueClient = new QueueClient(
+                configuration[ConfigurationConstants.egressConnectionString],
+                configuration[ConfigurationConstants.egressQueueName]);
         }
 
         public async Task SendResultToStactize(OrchestrationResultModel result)
