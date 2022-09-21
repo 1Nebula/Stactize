@@ -9,6 +9,8 @@ At the moment, the only orchestrator example that has been created is the Durabl
 
 The Durable Function Orchestrator is designed around Azure Durable Functions, which are a special type of Azure Function that allow for a stateful workflow and support for longer lived functions. More information about Durable Functions can be found at https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview?tabs=csharp.
 
+---
+
 ## 1. Prerequisites
 In order to build and test the Durable Function Orchestrator Example, you must have the following software installed:
 
@@ -16,6 +18,8 @@ In order to build and test the Durable Function Orchestrator Example, you must h
  2. Azure Functions Core Tools
 
 Visual Studio Code, Visual Studio 2019 and Visual Studio 2022 support development for Durable Functions. You can see [Microsoft's Guide on creating a durable function](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-create-first-csharp?pivots=code-editor-vscode) for more information.
+
+---
 
 ## 2. Understanding the Durable Function Orchestrator
 There are three parts to the durable orchestrator: 
@@ -42,6 +46,8 @@ Stactize sends various emails after actions have been consumed and returned to t
 | Reinstate| User    | Admin        |
 | Delete   | User    | Admin        |
 
+---
+
 ## 3. Adding your own orchestration code
 In the `DurableFunctionOrchestrator` class, there are five activities that are triggered based on the `SubscriptionEvent` that is received by the durable orchestrator function. These activities are:
 
@@ -55,17 +61,65 @@ Add all the code required to execute the operation.
 It is important to note that Stactize expects a response for all actions initiated - even if they fail. This is why each of these activity functions return a `OrchestrationResultModel`. If an exception is thrown inside the activity, it is recommended to catch the exception and return a default result model with the status set to failed (`OrchestrationState = Failed`).
 
 ### 3.1. Action Details
-Each action type can come with more information that is specific to the action. This is stored as a dictionary of Key/Value strings in the `ActionDetails` property of the `OrchestrationActionModel`. 
+Each action type can come with more information that is specific to the action. This is stored as a dictionary of Key/Value strings in the `ActionDetails` property of the `OrchestrationActionModel`.
+
+> Note: The `ActionDetails` dictionary values are always strings and must be parsed into their expected types.
+
 #### 3.1.1 Create Action Details
+When handling the Create action, the following keys could appear in the `ActionDetails` dictionary:
+- AutoRenew - A boolean describing whether the subscription has auto renew enabled. If this is false, the Subscription will be cancelled at the end of the billing period.
+- IsFreeTrial - A boolean describing whether the subscription is in free trial. If this is true, Billing for this subscription will only start on the following billing period.
+- Quantity - If the offer has been configured to use seat-based billing, this integer will describe the number of seats the purchaser has selected for this subscription. This key _will not appear_ in the dictionary if the offer is not configured for seat-based billing.
+
+*Example:*
 ```
 "ActionDetails": 
 {
-    "AutoRenew" : "True", //If set to false, the Subscription will be cancelled at the end of the billing period
-    "IsFreeTrial" : "False" //If set to true, the Subscription is in free trial and will not be charged for the first billing period
+    "AutoRenew" : "True",
+    "IsFreeTrial" : "False",
+    "Quantity": "10"
 }
 ``` 
 
-> Note: Action Details have currently not been configured for actions other than Create.
+#### 3.1.2 Update Action Details
+When handling the Update action, the following keys could appear in the `ActionDetails` dictionary:
+- NewQuantity - If the offer has been configured to use seat-based billing, this integer will describe the number of seats the purchaser has selected when updating their subscription.
+
+> Note: Plan changes and quantity changes must both be taken into account when handling an update action.
+
+*Example:*
+```
+"ActionDetails": 
+{
+    "NewQuantity": "25"
+}
+```
+
+### 3.2. Seat-based billing
+If your offer has been setup to use seat-based billing, Stactize will send the number of elected seats in the `ActionDetails` property of the `OrchestrationActionModel`. 
+
+When receiving a `Create` action, the number of seats can be retrieved from the `Quantity` key in the `ActionDetails` dictionary. See the `Action Details` section for an example of this dictionary.
+```
+if (OrchestrationActionModel.ActionDetails.ContainsKey("Quantity"))
+{
+    int.TryParse(OrchestrationActionModel.ActionDetails["Quantity"], out var numberOfSeats); 
+    //Set the number of seats in your application
+}
+```
+
+A user can change the number of seats. When this happens, the `Update` action will have an `ActionDetails` dictionary with a `NewQuantity` key.
+```
+if (OrchestrationActionModel.ActionDetails.ContainsKey("NewQuantity"))
+{
+    int.TryParse(OrchestrationActionModel.ActionDetails["NewQuantity"], out var newNumberOfSeats); 
+    //Update the nubmer of seats in your application to the new value
+}
+```
+
+### 3.3. Metered billing
+Stactize supports metered billing but this is handled outside of orchestration using a set of APIs. Please contact support@1Nebula.com for more information on how to handle metered billing with Stactize.
+
+---
 
 ## 4. Testing your orchestrator
 ### 4.1 Local testing
@@ -124,6 +178,8 @@ Once local testing is complete, you can test the entire integration between the 
 You can then configure your Orchestrator to use the ingress and egress queues specified by the `Orchestrator Configuration` found in Stactize. If your Orchestrator is deployed to Azure, ensure the *ingressServiceBusConnectionString*, *ingressQueueName*, *egressServiceBusConnectionString* and *egressQueueName* [application settings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-how-to-use-azure-function-app-settings?tabs=portal#settings) have been setup in the Portal.
 
 With the prerequisites completed, you can then search for your application in the Marketplace and purchase it. Stactize should send a "Create" message to your application's `Ingress Queue`. If you purchase a "Preview" offer, the message will be sent to the "Preview" queue, otherwise it will be sent to the "Production" queue. The subscription can then be updated and cancelled to test the other events. If you subscribe to a non-zero cost plan, you will not be charged for the subscription if you cancel it before 24 hours for a monthly billed plan or 14 days for a yearly billed plan.
+
+---
 
 ## 5. Support
 Please don't hesitate to send an email to support@1Nebula.com for more information or to answer any questions.

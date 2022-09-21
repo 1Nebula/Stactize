@@ -46,7 +46,7 @@ namespace Orchestrator.Core
         public Uri LoginUrl { get; set; }
 
         /// <summary>
-        /// Optional URL that will be sent to the user once activiation is successful instead of LoginUrl.
+        /// Optional URL that will be sent to the user once activation is successful instead of LoginUrl.
         /// Use URLs with one-time pins or specific path for users to activate their account
         /// </summary>
         public Uri FirstTimeLoginUrl { get; set; }
