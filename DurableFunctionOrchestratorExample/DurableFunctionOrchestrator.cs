@@ -40,8 +40,7 @@ namespace DurableFunctionOrchestratorExample
             //Retrieve message from trigger to consume
             var orchestratorAction = context.GetInput<OrchestrationActionModel>();
 
-            OrchestrationResultModel result = null;
-
+            OrchestrationResultModel result;
             try
             {
                 //Determine the action to take and generate a result
@@ -61,7 +60,7 @@ namespace DurableFunctionOrchestratorExample
             catch (Exception ex)
             {
                 //Catch any exceptions so that a response can be sent back to Stactize.
-                //This ensures the system is up to date and relevent client/administrator emails are sent
+                //This ensures the system is up to date and relevant client/administrator emails are sent
                 result = orchestratorAction.CreateFailedResult(new FailureMessageModel
                 {
                     FriendlyMessage = $"Oops! Something went wrong while trying to action against subscription with Id {orchestratorAction.SubscriptionId}",
@@ -78,8 +77,8 @@ namespace DurableFunctionOrchestratorExample
 
 
         ///<summary>
-        /// The Create activity is responsible for creating all the infrastructure and any setup steps required for a new subscription.
-        /// After the resources have been created and all the necesseary registrations have been completed, Stactize expects a URL to be returned.
+        /// The Create activity is responsible for creating all the infrastructure and any set-up steps required for a new subscription.
+        /// After the resources have been created and all the necessary registrations have been completed, Stactize expects a URL to be returned.
         /// This will be sent to the user in an email and can be either a unique URL or a first-time login url. 
         /// </summary>
         [FunctionName(Constants.DurableActivity.Create)]
@@ -92,7 +91,7 @@ namespace DurableFunctionOrchestratorExample
         ///<summary>
         /// The Delete activity is responsible for tearing down any infrastructure and removing the references to a user.
         /// Microsoft recommends you keep the data of the user for 30 days after they have cancelled their subscription.
-        /// This event will be recieved either after a user cancels their subscription or after 30 days of non-payment
+        /// This event will be received either after a user cancels their subscription or after 30 days of non-payment
         /// </summary>
         [FunctionName(Constants.DurableActivity.Delete)]
         public OrchestrationResultModel DeleteInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
@@ -112,8 +111,8 @@ namespace DurableFunctionOrchestratorExample
         }
 
         ///<summary>
-        /// The Suspend activity is resonsible for suspending a subscription after not paying. 
-        /// This can be as simple as setting flag in your application or decomissioning the app entirely.
+        /// The Suspend activity is responsible for suspending a subscription after not paying. 
+        /// This can be as simple as setting flag in your application or decommissioning the app entirely.
         /// </summary>
         [FunctionName(Constants.DurableActivity.Suspend)]
         public OrchestrationResultModel Suspend([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
@@ -136,7 +135,7 @@ namespace DurableFunctionOrchestratorExample
 
         ///<summary>
         /// The Complete Orchestrator activity is responsible for returning the result of the orchestration back to Stactize.
-        /// This will trigger any relevant emails to be sent to the user and and required updates to be sent to the Microsoft fulfillement API.
+        /// This will trigger any relevant emails to be sent to the user and and required updates to be sent to the Microsoft Fulfilment API.
         /// </summary>
         [FunctionName(Constants.DurableActivity.CompleteAction)]
         public async Task CompleteOrchestratorAction([ActivityTrigger] OrchestrationResultModel orchestrationResult, ILogger log)
