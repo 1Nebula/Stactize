@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Orchestrator.Core;
@@ -11,18 +11,18 @@ namespace Orchestrator.Services
 {
     public class ServiceBusService : IServiceBusService
     {
-        private readonly IQueueClient _queueClient;
+        private readonly ServiceBusClient _serviceBusClient;
+        private readonly ServiceBusSender _serviceBusSender;
 
         public ServiceBusService(IConfiguration configuration)
         {
-            _queueClient = new QueueClient(
-                configuration[ConfigurationConstants.egressConnectionString],
-                configuration[ConfigurationConstants.egressQueueName]);
+            _serviceBusClient = new ServiceBusClient(configuration[ConfigurationConstants.egressConnectionString]);
+            _serviceBusSender = _serviceBusClient.CreateSender(configuration[ConfigurationConstants.egressQueueName]);
         }
 
         public async Task SendResultToStactize(OrchestrationResultModel result)
         {
-            await _queueClient.SendAsync(new Message(UTF8Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result))));
+            await _serviceBusSender.SendMessageAsync(new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result))));
         }
     }
 }
