@@ -16,7 +16,7 @@ Stactize will enqueue messages to your Ingress queue whenever a subscriber takes
 | Reinstate | User has resolved their billing issues                    | 
 | Delete    | User has cancelled their subscription                     | 
 
-An orchestrator can be any application that can receive and send messages via the AMQP 1.0 protocol. Connections can be achieved via [supported client libraries](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview#client-libraries) that exist for multiple languages, [direct integrations](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview#client-libraries) Microsoft and Azure-native services or the [Service Bus SDK](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-samples), which is also available for multiple platforms.  
+An orchestrator can be any application that can receive and send messages via the AMQP 1.0 protocol. Connections can be achieved using [supported client libraries](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview#client-libraries) that exist for multiple languages, using [direct integrations](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview#integration) with Microsoft and Azure-native services or using the [Service Bus SDK](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-samples), which is also available for multiple platforms.  
 
 # Getting Started
 
