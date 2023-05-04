@@ -85,7 +85,7 @@ The Durable Function Orchestrator requires four parameters to be defined:
 When running locally, you can update the `local.appsettings.json` file to configure these values. See the [Local Testing Section](#4-testing-your-orchestrator) for more information about what values to use for the configurations. To protect connection strings, the `local.appsettings.json` will not be bundled with the app when building with the Release configuration.
 
 When deployed to Azure, the function will pull the configuration from the Application Settings setup in the Azure Portal.
-![Azure Portal Config](/Images/AzurePortalConfig.png)
+![Azure Portal Config](Images/AzurePortalConfig.png)
 
 For the most secure deployment, you can store the connection strings in a Key Vault and configure the Azure Function to use [Key Vault secret references](https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references?tabs=azure-cli) 
 
