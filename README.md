@@ -75,12 +75,12 @@ It is important to note that Stactize expects a response for all actions initiat
 
 ### 3.1. Configuration
 The Durable Function Orchestrator requires four parameters to be defined:
-| Parameter   | Description |
-| --       | --      | 
-| ingressServiceBusConnectionString   | The connection string to the Ingress Service Bus that Stactize will place actions for the orchestrator to fulfil. Stactize exposes a read-only connection string. |
-| ingressQueueName   | The name of the queue that will have incoming actions from Stactize | 
-| egressServiceBusConnectionString  | The connection string to the Egress Service bus that Stactize will read orchestration results from. Stactize exposes a write-only connection string.   | 
-| egressQueueName | The name of the queue that Stactize will read the orchestration result from    | 
+| Parameter                         | Description                                                                                                                                                       |
+| --                                | --                                                                                                                                                                | 
+| ingressServiceBusConnectionString | The connection string to the Ingress Service Bus that Stactize will place actions for the orchestrator to fulfil. Stactize exposes a read-only connection string. |
+| ingressQueueName                  | The name of the queue that will have incoming actions from Stactize                                                                                               | 
+| egressServiceBusConnectionString  | The connection string to the Egress Service bus that Stactize will read orchestration results from. Stactize exposes a write-only connection string.              | 
+| egressQueueName                   | The name of the queue that Stactize will read the orchestration result from                                                                                       | 
 
 When running locally, you can update the `local.appsettings.json` file to configure these values. See the [Local Testing Section](#4-testing-your-orchestrator) for more information about what values to use for the configurations. To protect connection strings, the `local.appsettings.json` will not be bundled with the app when building with the Release configuration.
 
