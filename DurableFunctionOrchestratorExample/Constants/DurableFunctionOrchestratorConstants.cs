@@ -6,12 +6,6 @@ namespace DurableFunctionOrchestratorExample
         public const string DurableOrchestrator = "DurableOrchestratorFunction";
         public const string OrchestrationTrigger = "OrchestrationTriggerFunction";
 
-        //Name of the configuration to fetch the connection string from
-        public const string ingressConnectionString = "ingressServiceBusConnectionString";
-        //Name of the queue to fetch in the form of "orchestrator-{ApplicationId}"
-        public const string QueueName = "orchestrator-fabrikamdisasterrevovery";
-
-
         public static class DurableActivity
         {
             public const string Create = "DurableActivity_Create";
