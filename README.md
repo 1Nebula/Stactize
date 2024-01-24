@@ -27,10 +27,10 @@ The Durable Function Orchestrator is designed around Azure Durable Functions, wh
 ## 1. Prerequisites
 In order to build and test the Durable Function Orchestrator Example, you must have the following software installed:
 
- 1. NET 6 SDK
+ 1. NET 8 SDK
  2. Azure Functions Core Tools
 
-Visual Studio Code, Visual Studio 2019 and Visual Studio 2022 support development for Durable Functions. You can see [Microsoft's Guide on creating a durable function](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-create-first-csharp?pivots=code-editor-vscode) for more information.
+Visual Studio Code and Visual Studio 2022 support development for .NET 8 Durable Functions. You can see [Microsoft's Guide on creating a durable function](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-create-first-csharp?pivots=code-editor-vscode) for more information.
 
 ---
 
@@ -44,7 +44,7 @@ When a message is placed on your ingress queue, the `TriggerOrchestrator` functi
 
 > Note: If an exception is thrown while processing the message, it will be placed back on the queue for re-processing. This will happen ten times before dead-lettering. If you do not want this functionality, you should catch the exception and abandon the message.
 
-The Durable Orchestrator is started by calling the `StartNewAsync` method on the `IDurableOrchestrationClient`. This will run the `RunOrchestrator` method.
+The Durable Orchestrator is started by calling the `ScheduleNewOrchestrationInstanceAsync` method on the `DurableTaskClient`. This will run the `RunOrchestrator` method.
 
 In the example, the `RunOrchestrator` method determines which activity to call based on the `SubscriptionEvent` that is present on the incoming `OrchestrationActionModel`. This allows the Durable Orchestrator to call another function and keep its state by awaiting a `CallActivityAsync` call. This can easily be extended to accommodate more complicated scenarios by adding any required activity functions and awaiting them. Please see the tutorials for [Function Chaining](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-sequence?tabs=csharp), [Fan-out/Fan-in](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-cloud-backup?tabs=csharp), and [Human verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification?tabs=csharp) for some examples of how to leverage durable functions.
 
@@ -192,6 +192,7 @@ Run the app locally and use a tool such as [Service Bus Explorer](https://github
   ]
 }
 ```
+> Note: The comments explaining fields will need to be removed in order for the orchestrator to process the message above as valid json.
 
 ### 4.2 End-to-end Testing
 Once local testing is complete, you can test the entire integration between the Azure Marketplace, Stactize and your orchestrator. To do this, ensure the following prerequisites have been completed:
