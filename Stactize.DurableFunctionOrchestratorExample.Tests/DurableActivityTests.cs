@@ -17,7 +17,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         private Fixture _fixture;
         private DurableFunctionOrchestrator _sut;
         private Mock<IServiceBusService> _serviceBusServiceContext;
-        private Mock<ILogger> _loggerContext;
+        private Mock<ILogger<DurableFunctionOrchestrator>> _loggerContext;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -28,9 +28,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             _serviceBusServiceContext.Setup(x => x.SendResultToStactize(It.IsAny<OrchestrationResultModel>()))
                                      .Returns(Task.CompletedTask);
 
-            _loggerContext = new Mock<ILogger>();
+            _loggerContext = new Mock<ILogger<DurableFunctionOrchestrator>>();
 
-            _sut = new DurableFunctionOrchestrator(_serviceBusServiceContext.Object);
+            _sut = new DurableFunctionOrchestrator(_serviceBusServiceContext.Object, _loggerContext.Object);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownAction = _fixture.Create<OrchestrationActionModel>();
 
             //Act
-            var result = _sut.CreateInfrastructure(knownAction, _loggerContext.Object);
+            var result = _sut.CreateInfrastructure(knownAction);
 
             //Assert
             result.Should().NotBeNull();
@@ -54,7 +54,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownAction = _fixture.Create<OrchestrationActionModel>();
 
             //Act
-            var result = _sut.Update(knownAction, _loggerContext.Object);
+            var result = _sut.Update(knownAction);
 
             //Assert
             result.Should().NotBeNull();
@@ -68,7 +68,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownAction = _fixture.Create<OrchestrationActionModel>();
 
             //Act
-            var result = _sut.Reinstate(knownAction, _loggerContext.Object);
+            var result = _sut.Reinstate(knownAction);
 
             //Assert
             result.Should().NotBeNull();
@@ -82,7 +82,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownAction = _fixture.Create<OrchestrationActionModel>();
 
             //Act
-            var result = _sut.Suspend(knownAction, _loggerContext.Object);
+            var result = _sut.Suspend(knownAction);
 
             //Assert
             result.Should().NotBeNull();
@@ -96,7 +96,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownAction = _fixture.Create<OrchestrationActionModel>();
 
             //Act
-            var result = _sut.DeleteInfrastructure(knownAction, _loggerContext.Object);
+            var result = _sut.DeleteInfrastructure(knownAction);
 
             //Assert
             result.Should().NotBeNull();

@@ -1,13 +1,15 @@
 using AutoFixture;
 using DurableFunctionOrchestratorExample;
 using FluentAssertions;
-using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using Microsoft.DurableTask;
+using Microsoft.DurableTask.Client;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Orchestrator.Core;
 using Orchestrator.Core.Contracts;
 using Orchestrator.Core.Models;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Stactize.DurableFunctionOrchestratorExample.Tests
@@ -18,8 +20,8 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         private Fixture _fixture;
         private DurableFunctionOrchestrator _sut;
         private Mock<IServiceBusService> _serviceBusServiceContext;
-        private Mock<ILogger> _loggerContext;
-        private Mock<IDurableOrchestrationClient> _durableOrchestrationClientContext;
+        private Mock<ILogger<DurableFunctionOrchestrator>> _loggerContext;
+        private Mock<DurableTaskClient> _durableOrchestrationClientContext;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -30,10 +32,10 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             _serviceBusServiceContext.Setup(x => x.SendResultToStactize(It.IsAny<OrchestrationResultModel>()))
                                      .Returns(Task.CompletedTask);
 
-            _loggerContext = new Mock<ILogger>();
-            _durableOrchestrationClientContext = new Mock<IDurableOrchestrationClient>();
+            _loggerContext = new Mock<ILogger<DurableFunctionOrchestrator>>();
+            _durableOrchestrationClientContext = new Mock<DurableTaskClient>("Test durable task client");
 
-            _sut = new DurableFunctionOrchestrator(_serviceBusServiceContext.Object);
+            _sut = new DurableFunctionOrchestrator(_serviceBusServiceContext.Object, _loggerContext.Object);
         }
 
         [Test]
@@ -43,10 +45,10 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownAction = _fixture.Create<OrchestrationActionModel>();
 
             //Act
-            await DurableFunctionOrchestrator.TriggerOrchestrator(knownAction, _loggerContext.Object, _durableOrchestrationClientContext.Object);
+            await _sut.TriggerOrchestrator(knownAction, _durableOrchestrationClientContext.Object);
 
             //Assert
-            _durableOrchestrationClientContext.Verify(x => x.StartNewAsync(Constants.DurableOrchestrator, null, knownAction));
+            _durableOrchestrationClientContext.Verify(x => x.ScheduleNewOrchestrationInstanceAsync(Constants.DurableOrchestrator, knownAction, It.IsAny<StartOrchestrationOptions>(), CancellationToken.None));
 
         }
 
@@ -60,18 +62,18 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
 
             var knownResultModel = _fixture.Create<OrchestrationResultModel>();
 
-            var context = new Mock<IDurableOrchestrationContext>();
+            var context = new Mock<TaskOrchestrationContext>();
             context.Setup(x => x.GetInput<OrchestrationActionModel>())
                    .Returns(knownActionModel);
-            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Create, knownActionModel))
+            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Create, knownActionModel, It.IsAny<TaskOptions>()))
                    .ReturnsAsync(knownResultModel);
 
             //Act
             var result = await _sut.RunOrchestrator(context.Object);
 
             //Assert
-            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Create, knownActionModel));
-            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel));
+            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Create, knownActionModel, It.IsAny<TaskOptions>()));
+            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OrchestrationResultModel));
             result.Should().BeEquivalentTo(knownResultModel);
@@ -88,18 +90,18 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
 
             var knownResultModel = _fixture.Create<OrchestrationResultModel>();
 
-            var context = new Mock<IDurableOrchestrationContext>();
+            var context = new Mock<TaskOrchestrationContext>();
             context.Setup(x => x.GetInput<OrchestrationActionModel>())
                    .Returns(knownActionModel);
-            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Delete, knownActionModel))
+            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Delete, knownActionModel, It.IsAny<TaskOptions>()))
                    .ReturnsAsync(knownResultModel);
 
             //Act
             var result = await _sut.RunOrchestrator(context.Object);
 
             //Assert
-            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Delete, knownActionModel));
-            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel));
+            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Delete, knownActionModel, It.IsAny<TaskOptions>()));
+            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OrchestrationResultModel));
             result.Should().BeEquivalentTo(knownResultModel);
@@ -116,22 +118,21 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
 
             var knownResultModel = _fixture.Create<OrchestrationResultModel>();
 
-            var context = new Mock<IDurableOrchestrationContext>();
+            var context = new Mock<TaskOrchestrationContext>();
             context.Setup(x => x.GetInput<OrchestrationActionModel>())
                    .Returns(knownActionModel);
-            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Reinstate, knownActionModel))
+            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Reinstate, knownActionModel, It.IsAny<TaskOptions>()))
                    .ReturnsAsync(knownResultModel);
 
             //Act
             var result = await _sut.RunOrchestrator(context.Object);
 
             //Assert
-            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Reinstate, knownActionModel));
-            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel));
+            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Reinstate, knownActionModel, It.IsAny<TaskOptions>()));
+            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OrchestrationResultModel));
             result.Should().BeEquivalentTo(knownResultModel);
-
         }
 
         [Test]
@@ -144,18 +145,18 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
 
             var knownResultModel = _fixture.Create<OrchestrationResultModel>();
 
-            var context = new Mock<IDurableOrchestrationContext>();
+            var context = new Mock<TaskOrchestrationContext>();
             context.Setup(x => x.GetInput<OrchestrationActionModel>())
                    .Returns(knownActionModel);
-            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Suspend, knownActionModel))
+            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Suspend, knownActionModel, It.IsAny<TaskOptions>()))
                    .ReturnsAsync(knownResultModel);
 
             //Act
             var result = await _sut.RunOrchestrator(context.Object);
 
             //Assert
-            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Suspend, knownActionModel));
-            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel));
+            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Suspend, knownActionModel, It.IsAny<TaskOptions>()));
+            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OrchestrationResultModel));
             result.Should().BeEquivalentTo(knownResultModel);
@@ -171,18 +172,18 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
 
             var knownResultModel = _fixture.Create<OrchestrationResultModel>();
 
-            var context = new Mock<IDurableOrchestrationContext>();
+            var context = new Mock<TaskOrchestrationContext>();
             context.Setup(x => x.GetInput<OrchestrationActionModel>())
                    .Returns(knownActionModel);
-            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Update, knownActionModel))
+            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Update, knownActionModel, It.IsAny<TaskOptions>()))
                    .ReturnsAsync(knownResultModel);
 
             //Act
             var result = await _sut.RunOrchestrator(context.Object);
 
             //Assert
-            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Update, knownActionModel));
-            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel));
+            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Update, knownActionModel, It.IsAny<TaskOptions>()));
+            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OrchestrationResultModel));
             result.Should().BeEquivalentTo(knownResultModel);
@@ -196,7 +197,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
                                           .With(x => x.Event, (SubscriptionEvent)999)
                                           .Create();
 
-            var context = new Mock<IDurableOrchestrationContext>();
+            var context = new Mock<TaskOrchestrationContext>();
             context.Setup(x => x.GetInput<OrchestrationActionModel>())
                    .Returns(knownActionModel);
 
@@ -204,7 +205,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var result = await _sut.RunOrchestrator(context.Object);
 
             //Assert
-            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, It.IsAny<OrchestrationResultModel>()));
+            context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, It.IsAny<OrchestrationResultModel>(), It.IsAny<TaskOptions>()));
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OrchestrationResultModel));
             result.State.Should().Be(OrchestrationState.Failed);
@@ -217,7 +218,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var knownOrchestrationResult = _fixture.Create<OrchestrationResultModel>();
 
             //Act
-            await _sut.CompleteOrchestratorAction(knownOrchestrationResult, _loggerContext.Object);
+            await _sut.CompleteOrchestratorAction(knownOrchestrationResult);
 
             //Assert
             _serviceBusServiceContext.Verify(x => x.SendResultToStactize(knownOrchestrationResult));

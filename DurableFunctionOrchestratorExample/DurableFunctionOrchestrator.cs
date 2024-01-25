@@ -1,7 +1,9 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.DurableTask;
+using Microsoft.DurableTask.Client;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Core;
 using Orchestrator.Core.Constants;
@@ -13,29 +15,31 @@ namespace DurableFunctionOrchestratorExample
     public class DurableFunctionOrchestrator
     {
         private readonly IServiceBusService _serviceBusService;
+        private readonly ILogger<DurableFunctionOrchestrator> _logger;
 
-        public DurableFunctionOrchestrator(IServiceBusService serviceBusService)
+        public DurableFunctionOrchestrator(IServiceBusService serviceBusService,
+            ILogger<DurableFunctionOrchestrator> logger)
         {
             _serviceBusService = serviceBusService ?? throw new ArgumentNullException(nameof(serviceBusService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        [FunctionName(Constants.OrchestrationTrigger)]
-        public static async Task TriggerOrchestrator(
+        [Function(Constants.OrchestrationTrigger)]
+        public async Task TriggerOrchestrator(
             [ServiceBusTrigger(ConfigurationConstants.ingressQueueName_, Connection = ConfigurationConstants.ingressConnectionString)] OrchestrationActionModel myQueueItem,
-            ILogger log,
-            [DurableClient] IDurableOrchestrationClient durableOrchestrationClient)
+            [DurableClient] DurableTaskClient durableOrchestrationClient)
         {
-            log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
+            _logger.LogInformation("C# ServiceBus queue trigger function processed message: {queueMessage}", JsonSerializer.Serialize(myQueueItem));
 
             //Start a new orchestrator - send service bus message as input data
-            var instanceId = await durableOrchestrationClient.StartNewAsync(Constants.DurableOrchestrator, null, myQueueItem);
+            var instanceId = await durableOrchestrationClient.ScheduleNewOrchestrationInstanceAsync(Constants.DurableOrchestrator, myQueueItem);
 
             //Log the instance Id - this Id can be used to track the results of the orchestration run
-            log.LogInformation($"Orchestrator instance created with Id: {instanceId}");
+            _logger.LogInformation("Orchestrator instance created with Id: {instanceId}", instanceId);
         }
 
-        [FunctionName(Constants.DurableOrchestrator)]
-        public async Task<OrchestrationResultModel> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
+        [Function(Constants.DurableOrchestrator)]
+        public async Task<OrchestrationResultModel> RunOrchestrator([OrchestrationTrigger] TaskOrchestrationContext context)
         {
             //Retrieve message from trigger to consume
             var orchestratorAction = context.GetInput<OrchestrationActionModel>();
@@ -81,8 +85,8 @@ namespace DurableFunctionOrchestratorExample
         /// After the resources have been created and all the necessary registrations have been completed, Stactize expects a URL to be returned.
         /// This will be sent to the user in an email and can be either a unique URL or a first-time login url. 
         /// </summary>
-        [FunctionName(Constants.DurableActivity.Create)]
-        public OrchestrationResultModel CreateInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
+        [Function(Constants.DurableActivity.Create)]
+        public OrchestrationResultModel CreateInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to create your instances and generate a url for a user to log in to
             return orchestrationAction.CreateSuccessResult(null);
@@ -93,8 +97,8 @@ namespace DurableFunctionOrchestratorExample
         /// Microsoft recommends you keep the data of the user for 30 days after they have cancelled their subscription.
         /// This event will be received either after a user cancels their subscription or after 30 days of non-payment
         /// </summary>
-        [FunctionName(Constants.DurableActivity.Delete)]
-        public OrchestrationResultModel DeleteInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
+        [Function(Constants.DurableActivity.Delete)]
+        public OrchestrationResultModel DeleteInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to delete your instances
             return orchestrationAction.CreateSuccessResult(null);
@@ -103,8 +107,8 @@ namespace DurableFunctionOrchestratorExample
         ///<summary>
         /// The Reinstate activity is responsible for re-activating a subscription after payment resumes for a suspended subscription. 
         /// </summary>
-        [FunctionName(Constants.DurableActivity.Reinstate)]
-        public OrchestrationResultModel Reinstate([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
+        [Function(Constants.DurableActivity.Reinstate)]
+        public OrchestrationResultModel Reinstate([ActivityTrigger] OrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to create your instances and generate a url for a user to log in to
             return orchestrationAction.CreateSuccessResult(new Uri("http://mycoolwebsite.net"));
@@ -114,8 +118,8 @@ namespace DurableFunctionOrchestratorExample
         /// The Suspend activity is responsible for suspending a subscription after not paying. 
         /// This can be as simple as setting flag in your application or decommissioning the app entirely.
         /// </summary>
-        [FunctionName(Constants.DurableActivity.Suspend)]
-        public OrchestrationResultModel Suspend([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
+        [Function(Constants.DurableActivity.Suspend)]
+        public OrchestrationResultModel Suspend([ActivityTrigger] OrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to create your instances and generate a url for a user to log in to
             return orchestrationAction.CreateSuccessResult(new Uri("http://mycoolwebsite.net"));
@@ -126,8 +130,8 @@ namespace DurableFunctionOrchestratorExample
         /// The plan to change to will be in the PlanId field of the orchestrationAction.
         /// If the URL changes, it must be returned in the LoginUrl field of the Orchestration Result Model.
         /// </summary>
-        [FunctionName(Constants.DurableActivity.Update)]
-        public OrchestrationResultModel Update([ActivityTrigger] OrchestrationActionModel orchestrationAction, ILogger log)
+        [Function(Constants.DurableActivity.Update)]
+        public OrchestrationResultModel Update([ActivityTrigger] OrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to create your instances and generate a url for a user to log in to
             return orchestrationAction.CreateSuccessResult(new Uri("http://mycoolwebsite.net"));
@@ -137,10 +141,10 @@ namespace DurableFunctionOrchestratorExample
         /// The Complete Orchestrator activity is responsible for returning the result of the orchestration back to Stactize.
         /// This will trigger any relevant emails to be sent to the user and and required updates to be sent to the Microsoft Fulfilment API.
         /// </summary>
-        [FunctionName(Constants.DurableActivity.CompleteAction)]
-        public async Task CompleteOrchestratorAction([ActivityTrigger] OrchestrationResultModel orchestrationResult, ILogger log)
+        [Function(Constants.DurableActivity.CompleteAction)]
+        public async Task CompleteOrchestratorAction([ActivityTrigger] OrchestrationResultModel orchestrationResult)
         {
-            log.LogInformation($"Completing orchestration action for subscription with Id {orchestrationResult.SubscriptionId}");
+            _logger.LogInformation("Completing orchestration action for subscription with Id {subscriptionId}", orchestrationResult.SubscriptionId);
 
             await _serviceBusService.SendResultToStactize(orchestrationResult);
 
