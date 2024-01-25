@@ -188,7 +188,7 @@ Run the app locally and use a tool such as [Service Bus Explorer](https://github
     {
       "Name": "PreferredContactEmail",
       "Value": ""
-    },
+    }
   ]
 }
 ```

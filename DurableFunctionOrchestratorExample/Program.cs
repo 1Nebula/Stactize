@@ -14,11 +14,14 @@ var host = new HostBuilder()
         services.ConfigureFunctionsApplicationInsights();
         services.AddTransient<IServiceBusService, ServiceBusService>();
 
-        // This will allow the orchestrator function to handle the string names of enum values in the SubscriptionEvent enum
         services.Configure<JsonSerializerOptions>(options =>
         {
+            // This allows the orchestrator function to handle the string names of enum values in the SubscriptionEvent enum
             options.Converters.Add(new JsonStringEnumConverter());
             options.PropertyNameCaseInsensitive = true;
+
+            // This allows the orchestrator function to ignore comments in the json messages it receives
+            options.ReadCommentHandling = JsonCommentHandling.Skip;
         });
     })
     .Build();
