@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.DurableTask;
@@ -28,13 +29,13 @@ namespace DurableFunctionOrchestratorExample
             [ServiceBusTrigger(ConfigurationConstants.ingressQueueName_, Connection = ConfigurationConstants.ingressConnectionString)] OrchestrationActionModel myQueueItem,
             [DurableClient] DurableTaskClient durableOrchestrationClient)
         {
-            _logger.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");//TODO serialize
+            _logger.LogInformation("C# ServiceBus queue trigger function processed message: {queueMessage}", JsonSerializer.Serialize(myQueueItem));
 
             //Start a new orchestrator - send service bus message as input data
             var instanceId = await durableOrchestrationClient.ScheduleNewOrchestrationInstanceAsync(Constants.DurableOrchestrator, myQueueItem);
 
             //Log the instance Id - this Id can be used to track the results of the orchestration run
-            _logger.LogInformation($"Orchestrator instance created with Id: {instanceId}");
+            _logger.LogInformation("Orchestrator instance created with Id: {instanceId}", instanceId);
         }
 
         [Function(Constants.DurableOrchestrator)]
@@ -143,7 +144,7 @@ namespace DurableFunctionOrchestratorExample
         [Function(Constants.DurableActivity.CompleteAction)]
         public async Task CompleteOrchestratorAction([ActivityTrigger] OrchestrationResultModel orchestrationResult)
         {
-            _logger.LogInformation($"Completing orchestration action for subscription with Id {orchestrationResult.SubscriptionId}");
+            _logger.LogInformation("Completing orchestration action for subscription with Id {subscriptionId}", orchestrationResult.SubscriptionId);
 
             await _serviceBusService.SendResultToStactize(orchestrationResult);
 
