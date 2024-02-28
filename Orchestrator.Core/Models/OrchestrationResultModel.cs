@@ -42,6 +42,7 @@ namespace Orchestrator.Core
         /// <summary>
         /// The URL that will be sent to the user when creation is successful.
         /// If FirstTimeLoginUrl is set, this Url will be used when navigating to the app via the SaaS portal.
+        /// Note that this URL is always required, even if your application is configured to send emails without login links.
         /// </summary>
         public Uri LoginUrl { get; set; }
 

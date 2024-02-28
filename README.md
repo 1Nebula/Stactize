@@ -48,7 +48,10 @@ The Durable Orchestrator is started by calling the `ScheduleNewOrchestrationInst
 
 In the example, the `RunOrchestrator` method determines which activity to call based on the `SubscriptionEvent` that is present on the incoming `OrchestrationActionModel`. This allows the Durable Orchestrator to call another function and keep its state by awaiting a `CallActivityAsync` call. This can easily be extended to accommodate more complicated scenarios by adding any required activity functions and awaiting them. Please see the tutorials for [Function Chaining](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-sequence?tabs=csharp), [Fan-out/Fan-in](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-cloud-backup?tabs=csharp), and [Human verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification?tabs=csharp) for some examples of how to leverage durable functions.
 
-Once the activity function has completed the orchestration action, the orchestrator needs to send a response back to Stactize. This response is expected to be of type `OrchestrationResultModel`. The returned result can either be a successful result (`OrchestrationState = Succeeded`) or an unsuccessful result (`OrchestrationState = Failed`). If any exception occurs in the orchestration or if there is a process that fails that will completely halt the orchestration, you should send a result back to Stactize to notify the user or an administrator (depending on the orchestration action). 
+Once the activity function has completed the orchestration action, the orchestrator needs to send a response back to Stactize. This response is expected to be of type `OrchestrationResultModel`. The returned result can either be a successful result (`OrchestrationState = Succeeded`) or an unsuccessful result (`OrchestrationState = Failed`). If any exception occurs in the orchestration or if there is a process that fails that will completely halt the orchestration, you should send a result back to Stactize to notify the user or an administrator (depending on the orchestration action and your application's configuration in the Stactize portal).
+
+> Note: Plan changes and quantity changes must both be taken into account when handling an update action.
+
 ### Emails sent 
 Stactize sends various emails after actions have been consumed and returned to the `Egress Queue`. Emails are sent to the following people according to whether the result is a success or not: 
 | Action   | Success | Failure      | 
@@ -59,6 +62,7 @@ Stactize sends various emails after actions have been consumed and returned to t
 | Reinstate| User    | Admin        |
 | Delete   | User    | Admin        |
 
+> Note: The Stactize portal allows you to configure your applications so that all emails sent to users will also be sent to an admin.
 ---
 
 ## 3. Adding your own orchestration code
