@@ -52,15 +52,15 @@ Once the activity function has completed the orchestration action, the orchestra
 
 ### Emails sent 
 Stactize sends various emails after actions have been consumed and returned to the `Egress Queue`. Emails are sent to the following people according to whether the result is a success or not: 
-| Action   | Success             | Failure      | 
-| --       | --                  | --           |
-| Create   | User<sup>1</sup>    | User & Admin |
-| Update   | User<sup>1</sup>    | User & Admin |
-| Suspend  | User<sup>1</sup>    | Admin        |
-| Reinstate| User<sup>1</sup>    | Admin        |
-| Delete   | User<sup>1</sup>    | Admin        |
+| Action   | Success*   | Failure      | 
+| --       | --         | --           |
+| Create   | User       | User & Admin |
+| Update   | User       | User & Admin |
+| Suspend  | User       | Admin        |
+| Reinstate| User       | Admin        |
+| Delete   | User       | Admin        |
 
-> 1 - The Stactize portal allows you to configure your applications so that all emails sent to users will **also** be sent to an admin.
+> **\*** The Stactize portal allows you to configure your applications so that all emails sent to users will **also** be sent to an admin.
 ---
 
 ## 3. Adding your own orchestration code
