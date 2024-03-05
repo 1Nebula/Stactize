@@ -50,19 +50,17 @@ In the example, the `RunOrchestrator` method determines which activity to call b
 
 Once the activity function has completed the orchestration action, the orchestrator needs to send a response back to Stactize. This response is expected to be of type `OrchestrationResultModel`. The returned result can either be a successful result (`OrchestrationState = Succeeded`) or an unsuccessful result (`OrchestrationState = Failed`). If any exception occurs in the orchestration or if there is a process that fails that will completely halt the orchestration, you should send a result back to Stactize to notify the user or an administrator (depending on the orchestration action and your application's configuration in the Stactize portal).
 
-> Note: Plan changes and quantity changes must both be taken into account when handling an update action.
-
 ### Emails sent 
 Stactize sends various emails after actions have been consumed and returned to the `Egress Queue`. Emails are sent to the following people according to whether the result is a success or not: 
-| Action   | Success | Failure      | 
-| --       | --      | --           |
-| Create   | User    | User & Admin |
-| Update   | User    | User & Admin |
-| Suspend  | User    | Admin        |
-| Reinstate| User    | Admin        |
-| Delete   | User    | Admin        |
+| Action   | Success*   | Failure      | 
+| --       | --         | --           |
+| Create   | User       | User & Admin |
+| Update   | User       | User & Admin |
+| Suspend  | User       | Admin        |
+| Reinstate| User       | Admin        |
+| Delete   | User       | Admin        |
 
-> Note: The Stactize portal allows you to configure your applications so that all emails sent to users will also be sent to an admin.
+> **\*** The Stactize portal allows you to configure your applications so that all emails sent to users will **also** be sent to an admin.
 ---
 
 ## 3. Adding your own orchestration code
