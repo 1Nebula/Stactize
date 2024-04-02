@@ -2,7 +2,9 @@
 # Introduction
 
 This repository contains example implementations of orchestrators that will consume messages from Stactize and send a response back.
-At the moment, the only orchestrator example that has been created is the Durable Function Orchestrator example. 
+The current example orchestrator implementations are:
+- Durable Function Orchestrator - suitable for orchestrations that are *more complex* and which any individual orchestration task could take *more than 15 minutes* to complete.
+- Standard Function Orchestrator - suitable for orchestrations that are simpler and which any individual orchestration task could take *less than 15 minutes* to complete.
 
 ## What is an Orchestrator?
 An orchestrator is required to receive these messages, take any action required to fulfil the Event (such as updating a configuration or spinning up a new resource), and finally respond to Stactize via a service bus message posted to the Egress queue.
@@ -34,7 +36,7 @@ Visual Studio Code and Visual Studio 2022 support development for .NET 8 Durable
 
 ---
 
-## 2. Understanding the Durable Function Orchestrator
+## 2.1. Understanding the Durable Function Orchestrator
 There are three parts to the durable orchestrator: 
 1. A service bus queue trigger 
 2. An Orchestrator Run method
@@ -50,7 +52,14 @@ In the example, the `RunOrchestrator` method determines which activity to call b
 
 Once the activity function has completed the orchestration action, the orchestrator needs to send a response back to Stactize. This response is expected to be of type `OrchestrationResultModel`. The returned result can either be a successful result (`OrchestrationState = Succeeded`) or an unsuccessful result (`OrchestrationState = Failed`). If any exception occurs in the orchestration or if there is a process that fails that will completely halt the orchestration, you should send a result back to Stactize to notify the user or an administrator (depending on the orchestration action and your application's configuration in the Stactize portal).
 
-### Emails sent 
+## 2.2 Understanding the Standard Function Orchestrator
+The Standard Function Orchestrator is constructed similarly to the Durable Function Orchestrator except it only relies on the standard Azure Function Runtime to consume messages from Stactize. For orchestration, this means that the entire function must execute in less than 15 minutes.
+
+The `Run()` method will be triggered when a message is placed on the `Ingress Queue`. This method will then deserialize the message body into an `OrchestrationActionModel` and determine the correct method to execute based on the `SubscriptionEvent`. These activity methods can be updated to execute any appropriate orchestration actions for your application. 
+
+Each activity method returns an `OrchestrationResultModel`, constructed from the incoming `OrchestrationActionModel`. This result is then sent to the `Egress Queue` for Stactize to process. If any exceptions occur, the exception is caught and an `OrchestrationResultModel` is created with a failure state and a supplied error message. This result is also sent to Stactize for processing and can be retried from the Stactize portal.
+
+### Emails sent by Stactize
 Stactize sends various emails after actions have been consumed and returned to the `Egress Queue`. Emails are sent to the following people according to whether the result is a success or not: 
 | Action   | Success*   | Failure      | 
 | --       | --         | --           |
@@ -61,6 +70,7 @@ Stactize sends various emails after actions have been consumed and returned to t
 | Delete   | User       | Admin        |
 
 > **\*** The Stactize portal allows you to configure your applications so that all emails sent to users will **also** be sent to an admin.
+
 ---
 
 ## 3. Adding your own orchestration code
