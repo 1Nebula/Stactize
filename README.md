@@ -101,6 +101,7 @@ When handling the Create action, the following keys could appear in the `ActionD
 - AutoRenew - A boolean describing whether the subscription has auto renew enabled. If this is false, the Subscription will be cancelled at the end of the billing period.
 - IsFreeTrial - A boolean describing whether the subscription is in free trial. If this is true, Billing for this subscription will only start on the following billing period.
 - Quantity - If the offer has been configured to use seat-based billing, this integer will describe the number of seats the purchaser has selected for this subscription. This key _will not appear_ in the dictionary if the offer is not configured for seat-based billing.
+- BillingTerm - A string describing how often the subscription is renewed. Examples: `B1M` = Monthly, `B1Y` = Yearly, `B2Y` = Every 2 Years, `B3Y` = Every 3 Years
 
 *Example:*
 ```
@@ -108,13 +109,15 @@ When handling the Create action, the following keys could appear in the `ActionD
 {
     "AutoRenew" : "True",
     "IsFreeTrial" : "False",
-    "Quantity": "10"
+    "Quantity": "10",
+    "BillingTerm" : "B1M"
 }
 ``` 
 
 #### 3.2.2 Update Action Details
 When handling the Update action, the following keys could appear in the `ActionDetails` dictionary:
 - NewQuantity - If the offer has been configured to use seat-based billing, this integer will describe the number of seats the purchaser has selected when updating their subscription.
+- BillingTerm - A string describing how often the subscription is renewed. Examples: `B1M` = Monthly, `B1Y` = Yearly, `B2Y` = Every 2 Years, `B3Y` = Every 3 Years
 
 > Note: Plan changes and quantity changes must both be taken into account when handling an update action.
 
@@ -122,7 +125,8 @@ When handling the Update action, the following keys could appear in the `ActionD
 ```
 "ActionDetails": 
 {
-    "NewQuantity": "25"
+    "NewQuantity": "25",
+    "BillingTerm" : "B1M"
 }
 ```
 
@@ -166,7 +170,8 @@ Run the app locally and use a tool such as [Service Bus Explorer](https://github
   "ActionDetails" : //See section 3.1. Action Details
   {
     "AutoRenew" : "True",
-    "IsFreeTrial" : "False"
+    "IsFreeTrial" : "False",
+    "BillingTerm" : "B1M"
   },
   "ApplicationId": "b48463a8-1811-4c23-9f75-a6825c29f71c", //Id of Application in Stactize
   "OperationId": "a1a644f5-efdf-43f3-b98e-01c5b55a6a98", //Id of the Operation
