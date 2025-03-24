@@ -1,6 +1,5 @@
 using AutoFixture;
 using DurableFunctionOrchestratorExample;
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -8,6 +7,7 @@ using Orchestrator.Core;
 using Orchestrator.Core.Contracts;
 using Orchestrator.Core.Models;
 using System.Threading.Tasks;
+using Shouldly;
 
 namespace Stactize.DurableFunctionOrchestratorExample.Tests
 {
@@ -43,8 +43,8 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var result = _sut.CreateInfrastructure(knownAction);
 
             //Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
         }
 
         [Test]
@@ -57,8 +57,8 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var result = _sut.Update(knownAction);
 
             //Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
         }
 
         [Test]
@@ -71,8 +71,8 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var result = _sut.Reinstate(knownAction);
 
             //Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
         }
 
         [Test]
@@ -85,8 +85,8 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var result = _sut.Suspend(knownAction);
 
             //Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
         }
 
         [Test]
@@ -99,8 +99,8 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             var result = _sut.DeleteInfrastructure(knownAction);
 
             //Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
         }
     }
 }

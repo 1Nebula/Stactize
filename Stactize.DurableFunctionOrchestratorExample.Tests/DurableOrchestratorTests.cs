@@ -1,6 +1,5 @@
 using AutoFixture;
 using DurableFunctionOrchestratorExample;
-using FluentAssertions;
 using Microsoft.DurableTask;
 using Microsoft.DurableTask.Client;
 using Microsoft.Extensions.Logging;
@@ -11,6 +10,7 @@ using Orchestrator.Core.Contracts;
 using Orchestrator.Core.Models;
 using System.Threading;
 using System.Threading.Tasks;
+using Shouldly;
 
 namespace Stactize.DurableFunctionOrchestratorExample.Tests
 {
@@ -74,9 +74,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             //Assert
             context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Create, knownActionModel, It.IsAny<TaskOptions>()));
             context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
-            result.Should().BeEquivalentTo(knownResultModel);
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
+            result.ShouldBeEquivalentTo(knownResultModel);
 
         }
 
@@ -102,9 +102,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             //Assert
             context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Delete, knownActionModel, It.IsAny<TaskOptions>()));
             context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
-            result.Should().BeEquivalentTo(knownResultModel);
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
+            result.ShouldBeEquivalentTo(knownResultModel);
 
         }
 
@@ -130,9 +130,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             //Assert
             context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Reinstate, knownActionModel, It.IsAny<TaskOptions>()));
             context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
-            result.Should().BeEquivalentTo(knownResultModel);
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
+            result.ShouldBeEquivalentTo(knownResultModel);
         }
 
         [Test]
@@ -157,9 +157,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             //Assert
             context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Suspend, knownActionModel, It.IsAny<TaskOptions>()));
             context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
-            result.Should().BeEquivalentTo(knownResultModel);
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
+            result.ShouldBeEquivalentTo(knownResultModel);
         }
 
         [Test]
@@ -184,9 +184,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
             //Assert
             context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(Constants.DurableActivity.Update, knownActionModel, It.IsAny<TaskOptions>()));
             context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, knownResultModel, It.IsAny<TaskOptions>()));
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
-            result.Should().BeEquivalentTo(knownResultModel);
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
+            result.ShouldBeEquivalentTo(knownResultModel);
         }
 
         [Test]
@@ -206,9 +206,9 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
 
             //Assert
             context.Verify(x => x.CallActivityAsync(Constants.DurableActivity.CompleteAction, It.IsAny<OrchestrationResultModel>(), It.IsAny<TaskOptions>()));
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(OrchestrationResultModel));
-            result.State.Should().Be(OrchestrationState.Failed);
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(OrchestrationResultModel));
+            result.State.ShouldBe(OrchestrationState.Failed);
         }
 
         [Test]
