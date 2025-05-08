@@ -5,16 +5,18 @@ using Orchestrator.Core.Contracts;
 using Orchestrator.Services;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Orchestrator.Core.Converters;
+using Microsoft.Azure.Functions.Worker.Builder;
 
-var host = new HostBuilder()
-    .ConfigureFunctionsWebApplication()
-    .ConfigureServices(services => {
-        // Use the IServiceCollection to configure your application and add services for dependency injection
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
-        services.AddTransient<IServiceBusService, ServiceBusService>();
+var builder = FunctionsApplication.CreateBuilder(args);
 
-        services.Configure<JsonSerializerOptions>(options =>
+builder.ConfigureFunctionsWebApplication();
+
+builder.Services
+    .AddApplicationInsightsTelemetryWorkerService()
+    .ConfigureFunctionsApplicationInsights();
+
+builder.Services.Configure<JsonSerializerOptions>(options =>
         {
             // This allows the orchestrator function to handle the string names of enum values in the SubscriptionEvent enum
             options.Converters.Add(new JsonStringEnumConverter());
@@ -23,7 +25,8 @@ var host = new HostBuilder()
             // This allows the orchestrator function to ignore comments in the json messages it receives
             options.ReadCommentHandling = JsonCommentHandling.Skip;
         });
-    })
-    .Build();
 
-host.Run();
+builder.Services.AddServiceBusService(builder.Configuration);
+
+
+await builder.Build().RunAsync();
