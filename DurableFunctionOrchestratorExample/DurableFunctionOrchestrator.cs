@@ -26,7 +26,7 @@ namespace DurableFunctionOrchestratorExample
 
         [Function(Constants.OrchestrationTrigger)]
         public async Task TriggerOrchestrator(
-            [ServiceBusTrigger(ConfigurationConstants.ingressQueueName_, Connection = ConfigurationConstants.ingressConnectionString)] OrchestrationActionModel myQueueItem,
+            [ServiceBusTrigger(ConfigurationConstants.ingressQueueName_, Connection = ConfigurationConstants.ingressConnectionString)] OrchestrationActionBaseModel myQueueItem,
             [DurableClient] DurableTaskClient durableOrchestrationClient)
         {
             _logger.LogInformation("C# ServiceBus queue trigger function processed message: {queueMessage}", JsonSerializer.Serialize(myQueueItem));
@@ -42,7 +42,7 @@ namespace DurableFunctionOrchestratorExample
         public async Task<OrchestrationResultModel> RunOrchestrator([OrchestrationTrigger] TaskOrchestrationContext context)
         {
             //Retrieve message from trigger to consume
-            var orchestratorAction = context.GetInput<OrchestrationActionModel>();
+            var orchestratorAction = context.GetInput<AzureOrchestrationActionModel>();
 
             OrchestrationResultModel result;
             try
@@ -86,7 +86,7 @@ namespace DurableFunctionOrchestratorExample
         /// This will be sent to the user in an email and can be either a unique URL or a first-time login url. 
         /// </summary>
         [Function(Constants.DurableActivity.Create)]
-        public OrchestrationResultModel CreateInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction)
+        public OrchestrationResultModel CreateInfrastructure([ActivityTrigger] AzureOrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to create your instances and generate a url for a user to log in to
             return orchestrationAction.CreateSuccessResult(null);
@@ -98,7 +98,7 @@ namespace DurableFunctionOrchestratorExample
         /// This event will be received either after a user cancels their subscription or after 30 days of non-payment
         /// </summary>
         [Function(Constants.DurableActivity.Delete)]
-        public OrchestrationResultModel DeleteInfrastructure([ActivityTrigger] OrchestrationActionModel orchestrationAction)
+        public OrchestrationResultModel DeleteInfrastructure([ActivityTrigger] AzureOrchestrationActionModel orchestrationAction)
         {
             //Call your orchestration functions here to delete your instances
             return orchestrationAction.CreateSuccessResult(null);
@@ -108,9 +108,9 @@ namespace DurableFunctionOrchestratorExample
         /// The Reinstate activity is responsible for re-activating a subscription after payment resumes for a suspended subscription. 
         /// </summary>
         [Function(Constants.DurableActivity.Reinstate)]
-        public OrchestrationResultModel Reinstate([ActivityTrigger] OrchestrationActionModel orchestrationAction)
+        public OrchestrationResultModel Reinstate([ActivityTrigger] AzureOrchestrationActionModel orchestrationAction)
         {
-            //Call your orchestration functions here to create your instances and generate a url for a user to log in to
+            //Call your orchestration functions here to remove the suspended state
             return orchestrationAction.CreateSuccessResult(new Uri("http://mycoolwebsite.net"));
         }
 
@@ -119,9 +119,9 @@ namespace DurableFunctionOrchestratorExample
         /// This can be as simple as setting flag in your application or decommissioning the app entirely.
         /// </summary>
         [Function(Constants.DurableActivity.Suspend)]
-        public OrchestrationResultModel Suspend([ActivityTrigger] OrchestrationActionModel orchestrationAction)
+        public OrchestrationResultModel Suspend([ActivityTrigger] AzureOrchestrationActionModel orchestrationAction)
         {
-            //Call your orchestration functions here to create your instances and generate a url for a user to log in to
+            //Call your orchestration functions here to put instances into a suspended state
             return orchestrationAction.CreateSuccessResult(new Uri("http://mycoolwebsite.net"));
         }
 
@@ -131,9 +131,9 @@ namespace DurableFunctionOrchestratorExample
         /// If the URL changes, it must be returned in the LoginUrl field of the Orchestration Result Model.
         /// </summary>
         [Function(Constants.DurableActivity.Update)]
-        public OrchestrationResultModel Update([ActivityTrigger] OrchestrationActionModel orchestrationAction)
+        public OrchestrationResultModel Update([ActivityTrigger] AzureOrchestrationActionModel orchestrationAction)
         {
-            //Call your orchestration functions here to create your instances and generate a url for a user to log in to
+            //Call your orchestration functions here to update your instances and generate a url for a user to log in to
             return orchestrationAction.CreateSuccessResult(new Uri("http://mycoolwebsite.net"));
         }
 
