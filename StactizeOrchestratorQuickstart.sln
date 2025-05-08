@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stactize.DurableFunctionOrc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMarketplaceOrchestratorExample", "MultiMarketplaceOrchestratorExample\MultiMarketplaceOrchestratorExample.csproj", "{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stactize.MultiMarketplaceOrchestratorExample.Tests", "Stactize.MultiMarketplaceOrchestratorExample.Tests\Stactize.MultiMarketplaceOrchestratorExample.Tests.csproj", "{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{3C135827-FEBC-4758-8F21-ADF7693BB5F6} = {39955216-97F2-457E-A582-8C520BF37D7C}
 		{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8} = {E9D7C438-905B-4646-92C7-4F8233E5503C}
 		{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7} = {C723BB86-B7EA-42CA-B1F8-78C7178BC576}
+		{6E0F679D-A343-47A3-B3F4-AB01B1B2A449} = {E9D7C438-905B-4646-92C7-4F8233E5503C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AF73765F-6DD8-43A4-A090-20A2B6D1BF5B}

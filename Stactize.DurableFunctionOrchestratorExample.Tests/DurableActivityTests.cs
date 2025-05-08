@@ -37,7 +37,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         public void CreateInfrastructure_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
-            var knownAction = _fixture.Create<OrchestrationActionBaseModel>();
+            var knownAction = _fixture.Create<AzureOrchestrationActionModel>();
 
             //Act
             var result = _sut.CreateInfrastructure(knownAction);
@@ -51,7 +51,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         public void Update_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
-            var knownAction = _fixture.Create<OrchestrationActionBaseModel>();
+            var knownAction = _fixture.Create<AzureOrchestrationActionModel>();
 
             //Act
             var result = _sut.Update(knownAction);
@@ -65,7 +65,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         public void Reinstate_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
-            var knownAction = _fixture.Create<OrchestrationActionBaseModel>();
+            var knownAction = _fixture.Create<AzureOrchestrationActionModel>();
 
             //Act
             var result = _sut.Reinstate(knownAction);
@@ -79,7 +79,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         public void Suspend_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
-            var knownAction = _fixture.Create<OrchestrationActionBaseModel>();
+            var knownAction = _fixture.Create<AzureOrchestrationActionModel>();
 
             //Act
             var result = _sut.Suspend(knownAction);
@@ -93,7 +93,7 @@ namespace Stactize.DurableFunctionOrchestratorExample.Tests
         public void DeleteInfrastructure_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
-            var knownAction = _fixture.Create<OrchestrationActionBaseModel>();
+            var knownAction = _fixture.Create<AzureOrchestrationActionModel>();
 
             //Act
             var result = _sut.DeleteInfrastructure(knownAction);
