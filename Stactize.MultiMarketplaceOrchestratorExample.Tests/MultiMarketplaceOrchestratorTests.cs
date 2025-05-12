@@ -110,7 +110,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         }
 
         [TestCase]
-        public async Task RunOrchestrator_WithInvalid_DoesNotThrow()
+        public async Task RunOrchestrator_WithInvalidOrchestrationAction_DoesNotThrow()
         {
             //Arrange
             var orchestrationActionModel = _fixture.Build<AwsOrchestrationActionModel>()
