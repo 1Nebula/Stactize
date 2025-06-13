@@ -3,47 +3,47 @@ using System.Collections.Generic;
 
 namespace Orchestrator.Core.Models
 {
-    public class OrchestrationActionModel
+    public abstract class OrchestrationActionBaseModel
     {
+        /// <summary>
+        /// The marketplace that the orchestration event originates from - must be overridden in all derived classes
+        /// </summary>
+        public abstract Marketplace OriginatingMarketplace { get; }
+
         /// <summary>
         /// Uniquely identifies the operation
         /// </summary>
-        public string OperationId { get; set; }
+        public required string OperationId { get; set; }
 
         /// <summary>
         /// Identifies the application the message was intended for. Used for queue name
         /// </summary>
-        public string ApplicationId { get; set; }
+        public required string ApplicationId { get; set; }
 
         /// <summary>
         /// The Id of the tenant that initiated the action
         /// </summary>
-        public string TenantId { get; set; }
+        public required string TenantId { get; set; }
 
         /// <summary>
         /// The Id of the subscription that initiated the action
         /// </summary>
-        public string SubscriptionId { get; set; }
-
-        /// <summary>
-        /// The Id of the selected plan (as configured in the Application configuration)
-        /// </summary>
-        public string PlanId { get; set; }
+        public required string SubscriptionId { get; set; }
 
         /// <summary>
         /// The type of action the orchestrator needs to undertake
         /// </summary>
-        public SubscriptionEvent Event { get; set; }
+        public required SubscriptionEvent Event { get; set; }
 
         /// <summary>
         /// List of values resulting from the signup form
         /// </summary>
-        public IEnumerable<UserFieldValueModel> UserFields { get; set; }
+        public IEnumerable<UserFieldValueModel> UserFields { get; set; } = [];
 
         /// <summary>
         /// Dictionary of extra details associated with the action
         /// </summary>
-        public IDictionary<string, string> ActionDetails { get; set; }
+        public IDictionary<string, string>? ActionDetails { get; set; }
 
         /// <summary>
         /// Creates an OrchestrationResultModel with State set to Succeeded
@@ -51,7 +51,7 @@ namespace Orchestrator.Core.Models
         /// <param name="loginUrl"></param>
         /// <param name="firstTimeLoginUrl">Optional</param>
         /// <returns></returns>
-        public OrchestrationResultModel CreateSuccessResult(Uri loginUrl, Uri firstTimeLoginUrl = null)
+        public OrchestrationResultModel CreateSuccessResult(Uri loginUrl, Uri? firstTimeLoginUrl = null)
         {
             return new OrchestrationResultModel()
             {
@@ -79,12 +79,15 @@ namespace Orchestrator.Core.Models
                 SubscriptionId = this.SubscriptionId,
                 TenantId = this.TenantId,
                 State = OrchestrationState.Failed,
-                FailureMessage = failureMessage
+                FailureMessage = failureMessage,
+                LoginUrl = new Uri("about:blank")
             };
         }
     }
 
-    //Describes different subscription events 
+    /// <summary>
+    /// Describes different subscription events 
+    /// </summary>
     public enum SubscriptionEvent
     {
         Create,
@@ -92,5 +95,14 @@ namespace Orchestrator.Core.Models
         Suspend,
         Delete,
         Reinstate
+    }
+
+    /// <summary>
+    /// Describes the originating marketplace
+    /// </summary>
+    public enum Marketplace
+    {
+        Azure,
+        Aws
     }
 }

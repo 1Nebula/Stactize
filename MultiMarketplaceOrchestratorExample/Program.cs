@@ -1,19 +1,19 @@
-﻿using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Orchestrator.Services;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using Orchestrator.Core.Converters;
-using Microsoft.Azure.Functions.Worker.Builder;
+using Orchestrator.Services;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-builder.Services
-    .AddApplicationInsightsTelemetryWorkerService()
-    .ConfigureFunctionsApplicationInsights();
+// Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
+// builder.Services
+//     .AddApplicationInsightsTelemetryWorkerService()
+//     .ConfigureFunctionsApplicationInsights();
 
 builder.Services.Configure<JsonSerializerOptions>(options =>
 {
