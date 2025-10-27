@@ -16,7 +16,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         }
 
         [Test]
-        public void AzureCreate_Should_ReturnOrchestrationResultModel()
+        public void StripeCreate_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
             var action = _fixture.Create<StripeOrchestrationActionModel>();
@@ -37,7 +37,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         }
 
         [Test]
-        public void AzureUpdate_Should_ReturnOrchestrationResultModel()
+        public void StripeUpdate_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
             var action = _fixture.Create<StripeOrchestrationActionModel>();
@@ -58,7 +58,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         }
 
         [Test]
-        public void AzureSuspend_Should_ReturnOrchestrationResultModel()
+        public void StripeSuspend_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
             var action = _fixture.Create<StripeOrchestrationActionModel>();
@@ -79,7 +79,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         }
 
         [Test]
-        public void AzureReinstate_Should_ReturnOrchestrationResultModel()
+        public void StripeReinstate_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
             var action = _fixture.Create<StripeOrchestrationActionModel>();
@@ -100,7 +100,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         }
 
         [Test]
-        public void AzureDelete_Should_ReturnOrchestrationResultModel()
+        public void StripeDelete_Should_ReturnOrchestrationResultModel()
         {
             //Arrange
             var action = _fixture.Create<StripeOrchestrationActionModel>();

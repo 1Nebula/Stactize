@@ -36,6 +36,7 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
 
         [TestCase(typeof(AzureOrchestrationActionModel))]
         [TestCase(typeof(AwsOrchestrationActionModel))]
+        [TestCase(typeof(StripeOrchestrationActionModel))]
         public async Task IngressQueueOrchestratorTrigger_Should_ScheduleNewOrchestrationInstance(Type actionType)
         {
             //Arrange
