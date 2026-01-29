@@ -103,6 +103,7 @@ namespace Orchestrator.Core.Models
     public enum Marketplace
     {
         Azure,
-        Aws
+        Aws,
+        Stripe
     }
 }
