@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35828.75 d17.13
@@ -11,17 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E9D7C438
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{648C5F31-9CDE-466A-BC43-A5D680F78C96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableFunctionOrchestratorExample", "DurableFunctionOrchestratorExample\DurableFunctionOrchestratorExample.csproj", "{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DurableFunctionOrchestratorExample", "DurableFunctionOrchestratorExample\DurableFunctionOrchestratorExample.csproj", "{8C8DEBF7-BF13-43FA-B9F3-FBEB55275390}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrator.Core", "Orchestrator.Core\Orchestrator.Core.csproj", "{9B2287E7-3B19-4E46-A671-CDD62395451B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestrator.Core", "Orchestrator.Core\Orchestrator.Core.csproj", "{9B2287E7-3B19-4E46-A671-CDD62395451B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrator.Services", "Orchestrator.Services\Orchestrator.Services.csproj", "{3C135827-FEBC-4758-8F21-ADF7693BB5F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestrator.Services", "Orchestrator.Services\Orchestrator.Services.csproj", "{3C135827-FEBC-4758-8F21-ADF7693BB5F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stactize.DurableFunctionOrchestratorExample.Tests", "Stactize.DurableFunctionOrchestratorExample.Tests\Stactize.DurableFunctionOrchestratorExample.Tests.csproj", "{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stactize.DurableFunctionOrchestratorExample.Tests", "Stactize.DurableFunctionOrchestratorExample.Tests\Stactize.DurableFunctionOrchestratorExample.Tests.csproj", "{0794B5DE-BA69-4C6D-88EF-A7BB061C48A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMarketplaceOrchestratorExample", "MultiMarketplaceOrchestratorExample\MultiMarketplaceOrchestratorExample.csproj", "{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiMarketplaceOrchestratorExample", "MultiMarketplaceOrchestratorExample\MultiMarketplaceOrchestratorExample.csproj", "{C5BE95C1-7892-4C41-97A7-146A3BD7B3C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stactize.MultiMarketplaceOrchestratorExample.Tests", "Stactize.MultiMarketplaceOrchestratorExample.Tests\Stactize.MultiMarketplaceOrchestratorExample.Tests.csproj", "{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stactize.MultiMarketplaceOrchestratorExample.Tests", "Stactize.MultiMarketplaceOrchestratorExample.Tests\Stactize.MultiMarketplaceOrchestratorExample.Tests.csproj", "{6E0F679D-A343-47A3-B3F4-AB01B1B2A449}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
