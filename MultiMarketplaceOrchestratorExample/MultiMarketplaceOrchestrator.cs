@@ -4,6 +4,7 @@ using Microsoft.DurableTask.Client;
 using Microsoft.Extensions.Logging;
 using MultiMarketplaceOrchestratorExample.AWS;
 using MultiMarketplaceOrchestratorExample.Azure;
+using MultiMarketplaceOrchestratorExample.Google;
 using MultiMarketplaceOrchestratorExample.Stripe;
 using Orchestrator.Core;
 using Orchestrator.Core.Contracts;
@@ -64,6 +65,10 @@ namespace MultiMarketplaceOrchestratorExample
                     (Marketplace.Stripe, SubscriptionEvent.Suspend) => nameof(StripeSuspendFunction.StripeSuspend),
                     (Marketplace.Stripe, SubscriptionEvent.Reinstate) => nameof(StripeReinstateFunction.StripeReinstate),
                     (Marketplace.Stripe, SubscriptionEvent.Delete) => nameof(StripeDeleteFunction.StripeDelete),
+
+                    (Marketplace.Google, SubscriptionEvent.Create) => nameof(GoogleCreateFunction.GoogleCreate),
+                    (Marketplace.Google, SubscriptionEvent.Update) => nameof(GoogleUpdateFunction.GoogleUpdate),
+                    (Marketplace.Google, SubscriptionEvent.Delete) => nameof(GoogleDeleteFunction.GoogleDelete),
 
                     _ => throw new NotImplementedException("No handler for orchestration event.")
                 };
