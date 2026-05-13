@@ -16,14 +16,14 @@ namespace Orchestrator.Core.Models
         /// <summary>
         /// The Google Cloud Marketplace product ID for the subscription/entitlement
         /// </summary>
-        public string ProductId { get; set; } = string.Empty;
+        public required string ProductId { get; set; }
         /// <summary>
         /// The Google Cloud Marketplace billing plan for the subscription/entitlement
         /// </summary>
-        public string PlanId { get; set; } = string.Empty;
+        public required string PlanId { get; set; }
         /// <summary>
         /// The Google Cloud Marketplace order ID for the subscription/entitlement
         /// </summary>
-        public string OrderId { get; set; } = string.Empty;
+        public required string OrderId { get; set; }
     }
 }
