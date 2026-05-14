@@ -104,6 +104,7 @@ namespace Orchestrator.Core.Models
     {
         Azure,
         Aws,
-        Stripe
+        Stripe,
+        Google
     }
 }

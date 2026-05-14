@@ -7,6 +7,7 @@ using Moq;
 using MultiMarketplaceOrchestratorExample;
 using MultiMarketplaceOrchestratorExample.AWS;
 using MultiMarketplaceOrchestratorExample.Azure;
+using MultiMarketplaceOrchestratorExample.Google;
 using MultiMarketplaceOrchestratorExample.Stripe;
 using Orchestrator.Core;
 using Orchestrator.Core.Contracts;
@@ -120,6 +121,33 @@ namespace Stactize.MultiMarketplaceOrchestratorExample.Tests
         {
             //Arrange
             var orchestrationActionModel = _fixture.Build<StripeOrchestrationActionModel>()
+                .With(x => x.Event, subscriptionEvent)
+                .Create();
+            var expectedResult = _fixture.Create<OrchestrationResultModel>();
+
+            var context = new Mock<TaskOrchestrationContext>();
+            context.Setup(x => x.GetInput<OrchestrationActionBaseModel>()).Returns(orchestrationActionModel);
+            context.Setup(x => x.CallActivityAsync<OrchestrationResultModel>(taskName, orchestrationActionModel, It.IsAny<TaskOptions>()))
+                .ReturnsAsync(expectedResult);
+
+            //Act
+            var act = () => _sut.RunOrchestrator(context.Object);
+
+            //Assert
+            await act.ShouldNotThrowAsync();
+            context.Verify(x => x.CallActivityAsync<OrchestrationResultModel>(taskName, orchestrationActionModel, It.IsAny<TaskOptions>()),
+                Times.Once);
+            context.Verify(x => x.CallActivityAsync(nameof(MultiMarketplaceOrchestrator.CompleteOrchestratorAction), expectedResult, It.IsAny<TaskOptions>()),
+                Times.Once);
+        }
+
+        [TestCase(SubscriptionEvent.Create, nameof(GoogleCreateFunction.GoogleCreate))]
+        [TestCase(SubscriptionEvent.Update, nameof(GoogleUpdateFunction.GoogleUpdate))]
+        [TestCase(SubscriptionEvent.Delete, nameof(GoogleDeleteFunction.GoogleDelete))]
+        public async Task RunOrchestrator_WithGoogleOrchestrationActionModel_Should_CallCompleteOrchestrator(SubscriptionEvent subscriptionEvent, string taskName)
+        {
+            //Arrange
+            var orchestrationActionModel = _fixture.Build<GoogleOrchestrationActionModel>()
                 .With(x => x.Event, subscriptionEvent)
                 .Create();
             var expectedResult = _fixture.Create<OrchestrationResultModel>();

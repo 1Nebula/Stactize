@@ -28,6 +28,7 @@ namespace Orchestrator.Core.Converters
                 "Azure" => JsonSerializer.Deserialize<AzureOrchestrationActionModel>(jsonDoc, options),
                 "Aws" => JsonSerializer.Deserialize<AwsOrchestrationActionModel>(jsonDoc, options),
                 "Stripe" => JsonSerializer.Deserialize<StripeOrchestrationActionModel>(jsonDoc, options),
+                "Google" => JsonSerializer.Deserialize<GoogleOrchestrationActionModel>(jsonDoc, options),
                 _ => throw new JsonException($"Unknown OriginatingMarketplace: {originatingMarketplace}")
             };
 
